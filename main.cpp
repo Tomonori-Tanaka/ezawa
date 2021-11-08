@@ -11,16 +11,20 @@ struct Object {
 
 int main() {
 
-    int Object::*int_ptr = &Object::data_member;
-    void (Object:: *func_ptr)() = &Object::member_function;
-
     Object object;
-    object.*int_ptr = 123;
-    (object.*func_ptr)();
+    int Object::*data_ptr = &Object::data_member;
+    void (Object::*member_function_ptr)() = &Object::member_function;
 
-    Object another_object;
-    another_object.*int_ptr = 456;
-    (another_object.*func_ptr)();
+    object.*data_ptr = 123;
+    (object.*member_function_ptr)();
+    std::invoke(data_ptr, object) = 456;
+    (object.*member_function_ptr)();
+
+    Object *object_ptr = &object;
+    (*object_ptr).data_member = 7;
+    (*object_ptr).member_function();
+    std::invoke(data_ptr, object_ptr) = 8;
+    (*object_ptr).member_function();
 
 
     return 0;
